@@ -9,5 +9,5 @@
 # TECHNOLOGY COLOPHON
 
     HTML5, CSS3, SVG, JavaScript
-    Normalize.css, LESS, vminpoly, Grunt, nodejs, bower, npm
-    NetBeans IDE, Adobe Illustrator
+    Normalize.css, LESS, nodejs, bower, Grunt, classList.js
+    NetBeans IDE, Adobe Illustrator, Mozilla Firefox, Chrome Canary, Internet Explorer
