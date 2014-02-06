@@ -115,7 +115,7 @@ module.exports = function (grunt) {
   }
 
   // Custom task that puts all together into a single HTML file.
-  grunt.registerTask("build", "Execute all tasks and combine everything into single HTML file.", function () {
+  grunt.registerTask("build", "Combine everything in the build directory into single HTML file.", function () {
     // Helper function that returns a base64 encoded SVG string to direct inclusion.
     var base64 = function (filename) {
       return "data:image/svg+xml;base64," + fs.readFileSync("build/" + filename).toString("base64");
