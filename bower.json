@@ -7,7 +7,7 @@
   ],
   "dependencies": {
     "normalize-css": "~3.0.0",
-    "classList.js": "https://github.com/eligrey/classList.js.git"
+    "classlist": "*"
   },
   "description": "Small fun project for our Client-Side Web Engineering lecture at the FH Salzburg.",
   "keywords": [
