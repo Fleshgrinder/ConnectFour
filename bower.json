@@ -2,7 +2,8 @@
   "name": "ConnectFour",
   "version": "1.0.0",
   "authors": [
-    "Richard Fussenegger <richard@fussenegger.info>"
+    "Richard Fussenegger <rfussenegger.mmt-m2012@fh-salzburg.ac.at>",
+    "Markus Deutschl <mdeutschl.mmt-m2012@fh-salzburg.ac.at>"
   ],
   "dependencies": {
     "normalize-css": "~3.0.0",
