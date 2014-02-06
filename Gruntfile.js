@@ -116,13 +116,16 @@ module.exports = function (grunt) {
 
   // Custom task that puts all together into a single HTML file.
   grunt.registerTask("build", "Combine everything in the build directory into single HTML file.", function () {
-    // Helper function that returns a base64 encoded SVG string to direct inclusion.
+    // Helper function that returns a base64 encoded SVG string for direct inclusion.
     var base64 = function (filename) {
       return "data:image/svg+xml;base64," + fs.readFileSync("build/" + filename).toString("base64");
     };
 
     // Load the nodejs FileSystem module.
     var fs = require("fs");
+    
+    // DRY!
+    var utf8 = { encoding: "utf-8" };
 
     // Create config with base64 encoded SVGs.
     var config = grunt.file.readJSON("src/config.json");
@@ -132,15 +135,15 @@ module.exports = function (grunt) {
     for (var i = 0; i < config.player.length; ++i) {
       config.player[i] = base64(config.player[i]);
     }
-    fs.writeFileSync("build/config.json", JSON.stringify(config), { encoding: "utf-8" });
+    fs.writeFileSync("build/config.json", JSON.stringify(config), utf8);
 
     // Create HTML file with SVGs, CSS, and JS directly embedded.
-    fs.writeFileSync("index.html", fs.readFileSync("src/main.html", { encoding: "utf-8" }).replace(/####([a-z\.]*)####/gi, function (match, p1) {
+    fs.writeFileSync("index.html", fs.readFileSync("src/main.html", utf8).replace(/####([a-z\.]*)####/gi, function (match, p1) {
       if (p1.substr(-3) === "svg") {
         return base64(p1);
       }
-      return fs.readFileSync("build/" + p1, { encoding: "utf-8" });
-    }), { encoding: "utf-8" });
+      return fs.readFileSync("build/" + p1, utf8);
+    }), utf8);
 
     // Remove the complete build directory and all of its content.
     require("rimraf").sync("build");
