@@ -34,6 +34,8 @@ Small fun project for our “Client-Side Web Engineering” lecture at the FH Sa
   <style>####min.css####</style>
 </head>
 <body>
+  <noscript><div class="table"><div class="cell"><p>No JavaScript No Fun!</p></div></div></noscript>
+  <!--[if lt IE 9 ]><table id="broken"><tr><td><p>Broken Browser, Sorry!</p></td></tr></table><![endif]-->
   <div class="table">
     <div class="cell">
       <div id="playboard"></div>
@@ -57,7 +59,7 @@ Small fun project for our “Client-Side Web Engineering” lecture at the FH Sa
       </div>
     </div>
   </div>
-  <!--[if IE 9 ]><script>####vminpoly.min.js####</script><![endif]-->
+  <!--[if IE 9 ]><script>####classList.js####</script><![endif]-->
   <script id="config" type="application/json">####config.json####</script>
   <script>####min.js####</script>
 </body>

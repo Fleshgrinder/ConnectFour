@@ -29,9 +29,8 @@
 /**
  * Auto-start ConnectFour app.
  *
- * @param {document} document
- *   Browser's global document object.
- * @returns {ConnectFour}
+ * @param {document} document Browser's global document object.
+ * @return {ConnectFour}
  */
 ;(function (document) {
   "use strict";
@@ -39,28 +38,134 @@
   /**
    * Instantiate new ConnectFour app.
    *
+   * @class ConnectFour
    * @constructor
-   * @returns {ConnectFour}
+   * @return {ConnectFour}
    */
   function ConnectFour() {
-    this.blocked        = false;
-    this.conf           = JSON.parse(document.getElementById("config").innerHTML);
-    this.currentPlayer  = 0;
-    this.disc           = null;
-    this.fields         = [];
-    this.playboard      = document.getElementById("playboard");
-    this.popover        = document.getElementById("popover");
+
+    /**
+     * Whether the playboard is currently blocked `true` or not `false`.
+     *
+     * @property blocked
+     * @type Boolean
+     * @default false
+     */
+    this.blocked = false;
+
+    /**
+     * The global configuration.
+     *
+     * @property conf
+     * @type Object
+     */
+    this.conf = JSON.parse(document.getElementById("config").innerHTML);
+
+    /**
+     * The current player, either `0` or `1`.
+     *
+     * @property currentPlayer
+     * @type Number
+     * @default 0
+     */
+    this.currentPlayer = 0;
+
+    /**
+     * HTML image element representing the current disc to insert.
+     *
+     * @property disc
+     * @type HTMLElement
+     * @default null
+     */
+    this.disc = null;
+
+    /**
+     * The fields of the playboard.
+     *
+     * Multi-dimensional array, outer array contains the columns and each column contains an array representing the rows.
+     *
+     * @property fields
+     * @type Array
+     * @default new Array()
+     */
+    this.fields = [];
+
+    /**
+     * Whether we're dealing with a broken client or not.
+     *
+     * @property ie9
+     * @type Boolean
+     * @readOnly
+     */
+    this.ie9 = document.documentElement.classList.contains("ie9");
+
+    /**
+     * The playboard div.
+     *
+     * @property playboard
+     * @type HTMLElement
+     * @readOnly
+     */
+    this.playboard = document.getElementById("playboard");
+
+    /**
+     * The popover div.
+     *
+     * @property popover
+     * @type HTMLElement
+     * @readOnly
+     */
+    this.popover = document.getElementById("popover");
+
+    /**
+     * The popover message div.
+     *
+     * @property popoverMessage
+     * @type HTMLElement
+     * @readOnly
+     */
     this.popoverMessage = this.popover.children[0].children[0];
-    this.popoverImage   = this.popoverMessage.children[0];
-    this.restart        = document.getElementById("restart");
-    this.stats          = { games: 0, wins0: 0, wins1: 0, draws: 0 };
-    this.statsTable     = {
+
+    /**
+     * The popover image div.
+     *
+     * @property popoverImage
+     * @type HTMLElement
+     * @readOnly
+     */
+    this.popoverImage = this.popoverMessage.children[0];
+
+    /**
+     * Button to restart the current game.
+     *
+     * @property restart
+     * @type HTMLElement
+     * @readOnly
+     */
+    this.restart = document.getElementById("restart");
+
+    /**
+     * Object containing game session statistics.
+     *
+     * @property stats
+     * @type Object
+     */
+    this.stats = { games: 0, wins0: 0, wins1: 0, draws: 0 };
+
+    /**
+     * Object containing the various statistics in the DOM.
+     *
+     * @property statsTable
+     * @type Object
+     */
+    this.statsTable = {
       games         : document.getElementById("stats-games"),
       wins0         : document.getElementById("stats-wins0"),
       wins1         : document.getElementById("stats-wins1"),
       draws         : document.getElementById("stats-draws"),
       currentPlayer : document.getElementById("stats-current-player")
     };
+
     this.init();
   }
 
@@ -69,12 +174,10 @@
     /**
      * Check if player has won in the given direction.
      *
-     * @param {Number} c
-     *   The column direction, `1` move up, `0` don't move, and `-1` move down.
-     * @param {Number} r
-     *   The row direction, `1` move up, `0` don't move, and `-1` move down.
-     * @returns {Boolean}
-     *   `true` if won in direction, `false` otherwise.
+     * @method checkDirection
+     * @param {Number} c The column direction, `1` move up, `0` don't move, and `-1` move down.
+     * @param {Number} r The row direction, `1` move up, `0` don't move, and `-1` move down.
+     * @return {Boolean} `true` if won in direction, `false` otherwise.
      */
     checkDirection: function (c, r) {
       var result = 1;
@@ -90,16 +193,12 @@
     /**
      * Count consecutive discs of current player in the given direction.
      *
-     * @param {Number} cx
-     *   The column direction.
-     * @param {Number} ci
-     *   The column increment.
-     * @param {Number} rx
-     *   The row direction.
-     * @param {Number} ri
-     *   The row increment.
-     * @returns {Number}
-     *   The number of consecutive discs.
+     * @method checkDirectionLoop
+     * @param {Number} cx The column direction.
+     * @param {Number} ci The column increment.
+     * @param {Number} rx The row direction.
+     * @param {Number} ri The row increment.
+     * @return {Number} The number of consecutive discs.
      */
     checkDirectionLoop: function (cx, ci, rx, ri) {
       for (
@@ -113,10 +212,14 @@
     /**
      * Check if the user has won, if there's a draw, or proceed normally.
      *
-     * @returns {ConnectFour}
+     * @chainable
+     * @method isVictory
+     * @return {ConnectFour}
      */
     isVictory: function () {
-      this.disc.removeEventListener("transitionend", this.isVictory);
+      if (this.ie9 === false) {
+        this.disc.removeEventListener("transitionend", this.isVictory);
+      }
 
       // Check if the player has won with the newly inserted disc.
       if (this.checkDirection(1,  0) || this.checkDirection(1, -1) || this.checkDirection(0,  1) || this.checkDirection(1,  1)) {
@@ -145,7 +248,9 @@
     /**
      * Initialize the ConnectFour instance.
      *
-     * @returns {ConnectFour}
+     * @chainable
+     * @method init
+     * @return {ConnectFour}
      */
     init: function () {
       this.isVictory                   = this.isVictory.bind(this);
@@ -158,7 +263,10 @@
       document.getElementById("stats").addEventListener("click", this.statsShow.bind(this), false);
       this.playboard.addEventListener("click", this.insertDisc.bind(this), false);
       this.popover.addEventListener("click", this.popoverHide.bind(this), false);
-      this.popover.addEventListener("transitionend", this.popoverUnblock.bind(this), false);
+
+      if (this.ie9 === false) {
+        this.popover.addEventListener("transitionend", this.popoverUnblock.bind(this), false);
+      }
 
       var self = this;
       document.getElementById("confirm").addEventListener("change", function () {
@@ -175,9 +283,10 @@
     /**
      * Insert disc at clicked playboard position.
      *
-     * @param {Number|Event} event
-     *   Either a column offset directly or a click event.
-     * @returns {ConnectFour}
+     * @chainable
+     * @method insertDisc
+     * @param {Number|Event} event Either a column offset directly or a click event.
+     * @return {ConnectFour}
      */
     insertDisc: function (event) {
       // Guardian Pattern: only continue with insertion if we are allowed to.
@@ -230,8 +339,8 @@
       this.playboard.appendChild(this.disc);
 
       // We love you IE9 :)
-      if (document.documentElement.classList.contains("ie9") === true) {
-        this.disc.classList.add("row-" + self.disc.row);
+      if (this.ie9 === true) {
+        this.disc.classList.add("row-" + this.disc.row);
         this.isVictory();
       }
       // All other browsers that understand CSS transitions and are awesome.
@@ -249,9 +358,10 @@
     /**
      * React on certain keypress events.
      *
-     * @param {Event} event
-     *   The fired keypress event.
-     * @returns {ConnectFour}
+     * @chainable
+     * @method keypress
+     * @param {Event} event The fired keypress event.
+     * @return {ConnectFour}
      */
     keypress: function (event) {
       // Only allow these actions if the playboard isn't blocked right now.
@@ -279,13 +389,17 @@
     /**
      * Hide any possibly visible popover message.
      *
-     * @param {Event} event
-     *   The fired event.
-     * @returns {ConnectFour}
+     * @chainable
+     * @method popoverHide
+     * @param {Event} [event] The fired event, if any.
+     * @return {ConnectFour}
      */
     popoverHide: function (event) {
       if (!(this.popoverMessage.classList.contains("stats") && event) || !(this.popoverMessage === event.target || this.popoverMessage.contains(event.target))) {
         this.popover.classList.remove("show");
+        if (this.ie9 === true) {
+          this.popoverUnblock();
+        }
       }
       return this;
     },
@@ -293,9 +407,10 @@
     /**
      * Show popover message to players.
      *
-     * @param {String} imgKey
-     *   The key of the image to display within our configuration object.
-     * @returns {ConnectFour}
+     * @chainable
+     * @method popoverShow
+     * @param {String} imgKey The key of the image to display within our configuration object.
+     * @return {ConnectFour}
      */
     popoverShow: function (imgKey) {
       this.blocked                = true;
@@ -307,7 +422,9 @@
     /**
      * Unblock playboard after popover is hidden.
      *
-     * @returns {ConnectFour}
+     * @chainable
+     * @method popoverUnblock
+     * @return {ConnectFour}
      */
     popoverUnblock: function () {
       if (this.blocked !== null && this.popover.classList.contains("show") === false) {
@@ -322,9 +439,10 @@
      *
      * The "rematch?" is a total gotcha question, close the tab if you want to quit. ;)
      *
-     * @param {String} imgKey
-     *   The key of the image to display within our configuration object.
-     * @returns {ConnectFour}
+     * @chainable
+     * @method rematch
+     * @param {String} imgKey The key of the image to display within our configuration object.
+     * @return {ConnectFour}
      */
     rematch: function (imgKey) {
       // Increase the games counter and determine who's going to start in the next round.
@@ -345,7 +463,9 @@
     /**
      * Hide all discs within the playboard and start new game after transition finished.
      *
-     * @returns {ConnectFour}
+     * @chainable
+     * @method rematchHide
+     * @return {ConnectFour}
      */
     rematchHide: function () {
       document.removeEventListener("keypress", this.rematchKeypress);
@@ -357,9 +477,10 @@
     /**
      * Helper method to allow keypress events on popover message after rematch.
      *
-     * @param {Event} event
-     *   The fired keypress event.
-     * @returns {ConnectFour}
+     * @chainable
+     * @method rematchKeypress
+     * @param {Event} event The fired keypress event.
+     * @return {ConnectFour}
      */
     rematchKeypress: function (event) {
       if (event.which === 0 || event.which === 13) {
@@ -371,24 +492,31 @@
     /**
      * Remove all discs within the playboard.
      *
-     * @returns {ConnectFour}
+     * @chainable
+     * @method removeDiscs
+     * @return {ConnectFour}
      */
     removeDiscs: function () {
-      var self     = this;
-      var elements = document.getElementsByClassName("disc");
-      var counter  = elements.length;
-      var remove   = function () {
-        self.playboard.removeChild(this);
-        if (--counter === 0) {
-          self.start();
-        }
-      };
-
-      for (var i = 0; i < elements.length; ++i) {
-        elements[i].addEventListener("transitionend", remove, false);
-        elements[i].style.top = -this.conf.discBox + "px";
+      if (this.ie9 === true) {
+        this.playboard.innerHTML = "";
+        this.start();
       }
+      else {
+        var self     = this;
+        var elements = document.getElementsByClassName("disc");
+        var counter  = elements.length;
+        var remove   = function () {
+          self.playboard.removeChild(this);
+          if (counter === 0) {
+            self.start();
+          }
+        };
 
+        for (var i = 0; i < elements.length; ++i, --counter) {
+          elements[i].addEventListener("transitionend", remove, false);
+          elements[i].style.top = -this.conf.discBox + "px";
+        }
+      }
       return this;
     },
 
@@ -398,7 +526,9 @@
      * This function will empty the playboard's fields and display a popover that informs the players who's suposed to
      * start this new round. The game starts after one of the players clicks on the popover.
      *
-     * @returns {ConnectFour}
+     * @chainable
+     * @method start
+     * @return {ConnectFour}
      */
     start: function () {
       // Initialize the playboard's fields and ensure that it's empty.
@@ -413,7 +543,9 @@
     /**
      * Show game statistics to the players.
      *
-     * @returns {ConnectFour}
+     * @chainable
+     * @method statsShow
+     * @return {ConnectFour}
      */
     statsShow: function () {
       this.blocked = true;

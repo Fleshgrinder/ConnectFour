@@ -55,8 +55,9 @@
 
 html,
 body,
-.table,
-img {
+img,
+#broken,
+.table {
   width: 100%;
   height: 100%;
 }
@@ -77,6 +78,25 @@ html {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+html,
+body,
+table {
+  font: bold 16px/1.6 "Segoe UI", sans-serif;
+  color: #fff;
+}
+
+noscript,
+#broken {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999999;
+  text-align: center;
+  background-color: #000;
 }
 
 #logo,
@@ -141,8 +161,6 @@ input {
 
 #popover .stats {
   padding: 20px 0;
-  font: bold 16px/1.6 "Segoe UI", sans-serif;
-  color: #fff;
   background-color: #000;
   box-shadow: 0 0 14px 10px #000;
 }
@@ -190,7 +208,9 @@ button[disabled] {
 #playboard {
   position: relative;
   width: calc(~"100vmin - "@playboardBorderWidth2x);
+  width: calc(~"100vm - "@playboardBorderWidth2x); /* IE9 */
   height: calc(~"100vmin - "@playboardBorderWidth2x);
+  height: calc(~"100vm - "@playboardBorderWidth2x); /* IE9 */
   max-width: @playboardDimension;
   max-height: @playboardDimension;
   margin: 0 auto;

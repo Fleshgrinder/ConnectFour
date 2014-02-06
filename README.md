@@ -4,7 +4,7 @@ Small fun project for our “Client-Side Web Engineering” lecture at the FH Sa
 
 ## How to deploy?
 
-Either execute `make install` or `npm update && bower update && grunt`. That’s all, really! Just load the generated
+Either execute `make` or `npm update && bower update && grunt`. That’s all, really! Just load the generated
 `index.html` in your browser and you’re able to play “Connect Four”.
 
 ## How to play?

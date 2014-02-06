@@ -68,11 +68,23 @@ module.exports = function (grunt) {
     jshint  : {
       all: [ "Gruntfile.js", "src/main.js" ]
     },
+    yuidoc: {
+      compile: {
+        name        : "<%= pkg.name %>",
+        description : "<%= pkg.description %>",
+        version     : "<%= pkg.version %>",
+        url         : "<%= pkg.repository.url %>",
+        options     : {
+          paths  : "src/",
+          outdir : "doc/"
+        }
+      }
+    },
     uglify: {
       my_target: {
         files: {
-          "build/min.js"     : [ "src/main.js" ],
-          "build/vminpoly.min.js" : [ "vendor/vminpoly/tokenizer.js", "vendor/vminpoly/parser.js", "vendor/vminpoly/vminpoly.js" ]
+          "build/min.js"       : [ "src/main.js" ],
+          "build/classList.js" : [ "vendor/classList.js/classList.js" ]
         }
       }
     },
@@ -96,20 +108,23 @@ module.exports = function (grunt) {
 
   });
 
-  [ "contrib-cssmin", "contrib-jshint", "svgmin", "recess", "contrib-uglify", "contrib-less", "contrib-htmlmin", "svgmin" ].forEach(function (task) {
-    grunt.loadNpmTasks("grunt-" + task);
-  });
+  for (var task in grunt.config.get("pkg.devDependencies")) {
+    if (task.substr(0, 6) === "grunt-") {
+      grunt.loadNpmTasks(task);
+    }
+  }
 
-  grunt.registerTask("svg", [ "svgmin" ]);
-  grunt.registerTask("css", [ "less", "recess", "cssmin" ]);
-  grunt.registerTask("js", [ "jshint", "uglify" ]);
-
+  // Custom task that puts all together into a single HTML file.
   grunt.registerTask("build", "Execute all tasks and combine everything into single HTML file.", function () {
+    // Helper function that returns a base64 encoded SVG string to direct inclusion.
     var base64 = function (filename) {
       return "data:image/svg+xml;base64," + fs.readFileSync("build/" + filename).toString("base64");
     };
-    var fs     = require("fs");
 
+    // Load the nodejs FileSystem module.
+    var fs = require("fs");
+
+    // Create config with base64 encoded SVGs.
     var config = grunt.file.readJSON("src/config.json");
     for (var k in config.img) {
       config.img[k] = base64(config.img[k]);
@@ -119,16 +134,18 @@ module.exports = function (grunt) {
     }
     fs.writeFileSync("build/config.json", JSON.stringify(config), { encoding: "utf-8" });
 
-    fs.writeFileSync("index.html", fs.readFileSync("src/main.html", { encoding: "utf-8" }).replace(/####([a-z\.]*)####/g, function (match, p1) {
+    // Create HTML file with SVGs, CSS, and JS directly embedded.
+    fs.writeFileSync("index.html", fs.readFileSync("src/main.html", { encoding: "utf-8" }).replace(/####([a-z\.]*)####/gi, function (match, p1) {
       if (p1.substr(-3) === "svg") {
         return base64(p1);
       }
       return fs.readFileSync("build/" + p1, { encoding: "utf-8" });
     }), { encoding: "utf-8" });
 
+    // Remove the complete build directory and all of its content.
     require("rimraf").sync("build");
   });
 
-  grunt.registerTask("default", [ "svg", "css", "js", "build", "htmlmin" ]);
+  grunt.registerTask("default", [ "svgmin", "less", "recess", "cssmin", "jshint", "yuidoc", "uglify", "build", "htmlmin" ]);
 
 };
