@@ -1,0 +1,22 @@
+{
+  "name": "ConnectFour",
+  "version": "1.0.0",
+  "description": "Small fun project for our Client-Side Web Engineering lecture at the FH Salzburg.",
+  "keywords": [
+    "game",
+    "offline"
+  ],
+  "author": "Richard Fussenegger <rfussenegger.mmt-m2012@fh-salzburg.ac.at>",
+  "license": "WTFPL-2.0",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-svgmin": "~0.3.0",
+    "grunt-recess": "~0.5.0",
+    "grunt-contrib-uglify": "~0.3.2",
+    "grunt-contrib-less": "~0.9.0",
+    "grunt-contrib-htmlmin": "~0.1.3",
+    "grunt-contrib-cssmin": "~0.7.0",
+    "rimraf": "~2.2.6"
+  }
+}

@@ -1,0 +1,18 @@
+{
+    "confirm"              : false,
+    "discDimension"        : 100,
+    "img"                  : {
+      "draw"    : "draw.svg",
+      "full"    : "column-full.svg",
+      "rematch" : "rematch.svg",
+      "start0"  : "player-1-start.svg",
+      "start1"  : "player-2-start.svg",
+      "wins0"   : "player-1-wins.svg",
+      "wins1"   : "player-2-wins.svg"
+    },
+    "playboardDimension"   : 960,
+    "playboardBorderWidth" : 10,
+    "playboardDiscs"       : 8,
+    "player"               : [ "disc-yellow.svg", "disc-red.svg" ],
+    "victory"              : 4
+}

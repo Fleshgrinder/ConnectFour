@@ -1,0 +1,13 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Richard Fussenegger -- Developer
+    Markus Deutschl -- Developer
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3, SVG, JavaScript
+    Normalize.css, LESS, vminpoly, Grunt, nodejs, bower, npm
+    NetBeans IDE, Adobe Illustrator

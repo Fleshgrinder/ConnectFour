@@ -1,0 +1,64 @@
+<!--
+        DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+                    Version 2, December 2004
+
+ Copyright (C) 2014 Richard & Markus
+
+ Everyone is permitted to copy and distribute verbatim or modified
+ copies of this license document, and changing it is allowed as long
+ as the name is changed.
+
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+  0. You just DO WHAT THE FUCK YOU WANT TO.
+-->
+
+<!--
+Small fun project for our “Client-Side Web Engineering” lecture at the FH Salzburg.
+
+@author Richard Fussenegger <rfussenegger.mmt-m2012@fh-salzburg.ac.at>
+@author Markus Deutschl <mdeutschl.mmt-m2012@fh-salzburg.ac.at>
+@license WTFPL-2.0
+@copyright (c) 2014 Richard & Markus
+@version 20140205
+-->
+
+<!DOCTYPE html>
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Connect Four</title>
+  <meta name="viewport" content="width=device-width">
+  <style>####min.css####</style>
+</head>
+<body>
+  <div class="table">
+    <div class="cell">
+      <div id="playboard"></div>
+    </div>
+  </div>
+  <img id="logo" src="####logo.svg####" alt="Connect Four logo">
+  <img id="stats" src="####stats.svg####" alt="Question mark" title="Press [s] on your keyboard to open the stats.">
+  <div id="popover" class="table">
+    <div class="cell">
+      <div id="popover-message">
+        <div id="popover-image"></div>
+        <table id="popover-stats">
+          <tr><td>Games played:</td><td id="stats-games">0</td></tr>
+          <tr><td>Player 1 wins:</td><td id="stats-wins0">0</td></tr>
+          <tr><td>Player 2 wins:</td><td id="stats-wins1">0</td></tr>
+          <tr><td>Draws:</td><td id="stats-draws">0</td></tr>
+          <tr><td>Current player:</td><td id="stats-current-player">1</td></tr>
+          <tr><td colspan="2"><input id="confirm" type="checkbox"> Confirm each move?</td></tr>
+          <tr><td colspan="2"><button id="restart" disabled>Restart</button></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!--[if IE 9 ]><script>####vminpoly.min.js####</script><![endif]-->
+  <script id="config" type="application/json">####config.json####</script>
+  <script>####min.js####</script>
+</body>
+</html>

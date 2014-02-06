@@ -1,0 +1,254 @@
+/**
+ *        DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+ *                    Version 2, December 2004
+ *
+ * Copyright (C) 2014 Richard & Markus
+ *
+ * Everyone is permitted to copy and distribute verbatim or modified
+ * copies of this license document, and changing it is allowed as long
+ * as the name is changed.
+ *
+ *            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+ *   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+ *
+ *  0. You just DO WHAT THE FUCK YOU WANT TO.
+ */
+
+/**
+ * Small fun project for our “Client-Side Web Engineering” lecture at the FH Salzburg.
+ *
+ * @author Richard Fussenegger <rfussenegger.mmt-m2012@fh-salzburg.ac.at>
+ * @author Markus Deutschl <mdeutschl.mmt-m2012@fh-salzburg.ac.at>
+ * @license WTFPL-2.0
+ * @copyright (c) 2014 Richard & Markus
+ * @version 20140205
+ */
+
+
+// --------------------------------------------------------------------------------------------------------------------- Variables
+
+
+@discDimension          : 100px;
+@playboardDimension     : 960px;
+@playboardBorderWidth   : 10px;
+@playboardDiscs         : 8;
+@playboardBorderWidth2x : @playboardBorderWidth * 2;
+@discBox                : @discDimension + @playboardBorderWidth2x;
+
+
+// --------------------------------------------------------------------------------------------------------------------- Mixins
+
+
+/* Calculate percentage dimension for @inner child of @outer. */
+.calc-percentage(@outer, @inner) {
+  @percentage: percentage(((100 / @outer) * @inner) / 100);
+}
+
+/* Calculate transition duration. */
+.calc-transition(@x) {
+  @seconds: unit(round(0.1 * @x, 1), s);
+}
+
+
+// --------------------------------------------------------------------------------------------------------------------- Styles
+
+
+html,
+body,
+.table,
+img {
+  width: 100%;
+  height: 100%;
+}
+
+html,
+body,
+#playboard {
+  overflow: hidden;
+}
+
+img {
+  height: auto;
+}
+
+html {
+  background-color: #444;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#logo,
+#stats,
+#popover,
+#playboard:after,
+.disc {
+  position: absolute;
+}
+
+#logo {
+  top: 0;
+  left: 0;
+  z-index: 4;
+  width: 50%;
+  pointer-events: none;
+}
+
+#stats {
+  right: 5px;
+  bottom: 5px;
+  width: 5%;
+}
+
+#stats,
+#playboard,
+input {
+  cursor: pointer;
+}
+
+#popover,
+#playboard:after {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+#popover {
+  z-index: 3;
+  background-color: rgba(0, 0, 0, 0.75);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.5s ease-in-out;
+  transition-property: opacity, visibility;
+}
+
+#popover.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+#popover-message,
+#popover-stats {
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+#popover-stats {
+  display: none;
+}
+
+#popover .stats {
+  padding: 20px 0;
+  font: bold 16px/1.6 "Segoe UI", sans-serif;
+  color: #fff;
+  background-color: #000;
+  box-shadow: 0 0 14px 10px #000;
+}
+
+#popover .stats #popover-image {
+  display: none;
+}
+
+#popover .stats #popover-stats {
+  display: table;
+}
+
+#popover table {
+  margin: 0 auto;
+}
+
+td[colspan] {
+  padding-top: 1em;
+  text-align: center;
+}
+
+input {
+  margin-right: 0.5em;
+  vertical-align: baseline;
+}
+
+button {
+  color: #000;
+}
+
+button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.table {
+  display: table;
+}
+
+.cell {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#playboard {
+  position: relative;
+  width: calc(~"100vmin - "@playboardBorderWidth2x);
+  height: calc(~"100vmin - "@playboardBorderWidth2x);
+  max-width: @playboardDimension;
+  max-height: @playboardDimension;
+  margin: 0 auto;
+  background-color: #fff;
+  border: @playboardBorderWidth solid #002ae0;
+  box-shadow: 0 0 10px #000;
+}
+
+#playboard:after {
+  z-index: 2;
+  background-image: data-uri("image/svg+xml;base64", "../build/playboard.svg");
+  background-size: cover;
+  content: "";
+}
+
+.disc {
+  z-index: 1;
+  .calc-percentage(@playboardDimension, @discDimension);
+  width: @percentage;
+  height: @percentage;
+}
+
+/* Calculate disc position for each column. */
+.column(@i) when (@i > 0) {
+  .column-@{i} {
+    .calc-percentage(@playboardDimension, @playboardBorderWidth);
+    top: -@discBox;
+    left: @percentage + percentage((((100 / @playboardDimension) * @discBox) * (@i - 1)) / 100);
+  }
+  .column(@i - 1);
+}
+.column(@playboardDiscs);
+
+/* Calculate disc position and velocity for each row. */
+.row(@j) when (@j <= @playboardDiscs) {
+  .row-@{j} {
+    .calc-percentage(@playboardDimension, @playboardBorderWidth);
+    top: @percentage + percentage((((100 / @playboardDimension) * @discBox) * (@playboardDiscs - @j)) / 100);
+    .calc-transition(@playboardDiscs + 1 - @j);
+    transition: top @seconds ease-in;
+  }
+  .row(@j + 1);
+}
+.row(1);
+
+/* Fix dimensions for square or landscape. */
+@media all and (min-aspect-ratio: 1/1) {
+
+  #logo {
+    width: 25%;
+  }
+
+  #stats {
+    width: 2.5%;
+  }
+
+  #popover-message {
+    max-width: 50%;
+  }
+
+}

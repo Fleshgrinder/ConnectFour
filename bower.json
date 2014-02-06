@@ -1,0 +1,18 @@
+{
+  "name": "ConnectFour",
+  "version": "1.0.0",
+  "authors": [
+    "Richard Fussenegger <richard@fussenegger.info>"
+  ],
+  "dependencies": {
+    "normalize-css": "*",
+    "vminpoly": "*"
+  },
+  "description": "Small fun project for our Client-Side Web Engineering lecture at the FH Salzburg.",
+  "keywords": [
+    "game",
+    "offline"
+  ],
+  "license": "WTFPL-2.0",
+  "private": true
+}
