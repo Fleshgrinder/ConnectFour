@@ -84,7 +84,7 @@ module.exports = function (grunt) {
       my_target: {
         files: {
           "build/min.js"       : [ "src/main.js" ],
-          "build/classList.js" : [ "vendor/classList.js/classList.js" ]
+          "build/classList.js" : [ "vendor/classlist/classList.js" ]
         }
       }
     },
